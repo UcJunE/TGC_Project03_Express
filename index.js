@@ -22,7 +22,12 @@ app.use(
   })
 );
 
-async function main() {}
+// import in router
+const landingRoutes = require("./routes/landing");
+
+async function main() {
+  app.use("/", landingRoutes);
+}
 
 main();
 
