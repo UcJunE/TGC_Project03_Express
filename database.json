@@ -1,0 +1,8 @@
+{
+    "dev": {
+      "driver": "mysql",
+      "user": "admin",
+      "password":"rotiprata123",
+      "database":"jewel_shop"
+    }
+  }
