@@ -15,22 +15,23 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable("blacklisted_tokens", {
+  return db.createTable("roles", {
     id: {
       type: "int",
+      unsigned: true,
       primaryKey: true,
       autoIncrement: true,
-      unsigned: true,
     },
-    token: {
+    role: {
       type: "string",
-      length: 255,
+      lenght: 50,
+      notNull: true,
     },
-    created_date: "date",
   });
 };
+
 exports.down = function (db) {
-  return db.dropTable("blacklisted_tokens");
+  return db.dropTable("roles");
 };
 
 exports._meta = {
