@@ -1,0 +1,133 @@
+const forms = require("forms");
+
+//setup forms
+const fields = forms.fields;
+const validators = forms.validators;
+const widgets = forms.widgets;
+
+// all field will be validated
+const options = {
+  validatePastFirstError: true,
+};
+
+// Allow of styling of forms using Bootstrap
+const bootstrapField = function (name, object) {
+  if (!Array.isArray(object.widget.classes)) {
+    object.widget.classes = [];
+  }
+
+  // Additional condition for allowing multiple checkbox and radio
+  if (
+    object.widget.type == "multipleCheckbox" ||
+    object.widget.type == "multipleRadio"
+  ) {
+    object.widget.classes.push("form-check-input");
+  } else {
+    if (object.widget.classes.indexOf("form-control") === -1) {
+      object.widget.classes.push("form-control");
+    }
+  }
+
+  var validationclass = object.value && !object.error ? "is-valid" : "";
+  validationclass = object.error ? "is-invalid" : validationclass;
+  if (validationclass) {
+    object.widget.classes.push(validationclass);
+  }
+
+  var label = object.labelHTML(name);
+  var error = object.error
+    ? '<div class="invalid-feedback">' + object.error + "</div>"
+    : "";
+
+  var widget = object.widget.toHTML(name, object);
+  return '<div class="form-group">' + label + widget + error + "</div>";
+};
+
+//create form
+const createProductForm = () => {
+  return forms.create({
+    name: fields.string({
+      label: "Product Name",
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    description: fields.string({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    cost: fields.number({
+      label: "Cost(cents)",
+      required: true,
+      errorAfterField: true,
+      validators: [validators.integer(), validators.min(0)],
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    design: fields.string({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    weight: fields.number({
+      label: "Weight (g)",
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.integer(), validators.min(0)],
+    }),
+    width: fields.number({
+      label: "Width (mm)",
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.integer(), validators.min(0)],
+    }),
+    height: fields.number({
+      label: "Height (mm)",
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.integer(), validators.min(0)],
+    }),
+    stock: fields.number({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.integer(), validators.min(0)],
+    }),
+    created_date: fields.date({
+      widget: widgets.hidden(),
+    }),
+    jewelry_img_url: fields.url({
+      required: validators.required("Product image is required"),
+      errorAfterField: true,
+      validators: [validators.url()],
+      widget: widgets.hidden(),
+    }),
+    jewelry_thumbnail_url: fields.url({
+      widget: widgets.hidden(),
+    }),
+  });
+};
+
+module.exports = {
+  createProductForm,
+  bootstrapField,
+};
