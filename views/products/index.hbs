@@ -1,0 +1,53 @@
+{{#extends "base"}}
+  {{#block "content"}}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Product Image</th>
+          <th>Color</th>
+          <th>Description</th>
+          <th>Cost</th>
+          <th>Weight</th>
+          <th>Dimension</th>
+          <th>Design</th>
+          <th>Date Created</th>
+          <th>Stock Balance</th>
+
+        </tr>
+        <tbody>
+          {{#each products}}
+            <tr>
+              <td>
+                {{this.id}}
+              </td>
+              <td>
+                {{this.name}}
+              </td>
+              <td>
+                <img
+                  src="{{this.jewelry_img_url}}"
+                  alt=""
+                  style="width: 130px;"
+                />
+              </td>
+              <td>{{this.color_id}}</td>
+              <td>
+                {{this.description}}
+              </td>
+              <td>${{this.cost}}</td>
+              <td>{{this.weight}}</td>
+              <td>{{this.width}}(width)x{{this.height}}(height)</td>
+              <td>{{this.design}}</td>
+              <td>{{this.created_date}}</td>
+              <td>Left: {{this.stock}} <br /> Sold:{{this.sold}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </thead>
+    </table>
+
+  {{/block}}
+
+{{/extends}}

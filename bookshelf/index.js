@@ -1,7 +1,5 @@
-//setup db connection
-const knex = require("knex");
-
-knex({
+// Setting up the database connection
+const knex = require("knex")({
   client: "mysql",
   connection: {
     user: "admin",
@@ -9,7 +7,6 @@ knex({
     database: "jewel_shop",
   },
 });
-
 const bookshelf = require("bookshelf")(knex);
 
 module.exports = bookshelf;
