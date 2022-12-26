@@ -27,7 +27,7 @@ const landingRoutes = require("./routes/landing");
 const productsRoutes = require("./routes/products");
 
 async function main() {
-  app.use("/landing", landingRoutes);
+  app.use("/", landingRoutes);
   app.use("/products", productsRoutes);
 }
 

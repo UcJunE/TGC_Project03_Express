@@ -44,7 +44,7 @@ const bootstrapField = function (name, object) {
 };
 
 //create form
-const createProductForm = () => {
+const createProductForm = (colors) => {
   return forms.create({
     name: fields.string({
       label: "Product Name",
@@ -62,7 +62,7 @@ const createProductForm = () => {
       },
     }),
     cost: fields.number({
-      label: "Cost(cents)",
+      label: "Cost (cents)",
       required: true,
       errorAfterField: true,
       validators: [validators.integer(), validators.min(0)],
@@ -73,6 +73,16 @@ const createProductForm = () => {
     design: fields.string({
       required: true,
       errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    color_id: fields.string({
+      label: "Color",
+      required: true,
+      errorAfterField: true,
+      widget: widgets.select(),
+      choices: colors,
       cssClasses: {
         label: ["form-label"],
       },
@@ -115,15 +125,15 @@ const createProductForm = () => {
     created_date: fields.date({
       widget: widgets.hidden(),
     }),
-    jewelry_img_url: fields.url({
-      required: validators.required("Product image is required"),
-      errorAfterField: true,
-      validators: [validators.url()],
-      widget: widgets.hidden(),
-    }),
-    jewelry_thumbnail_url: fields.url({
-      widget: widgets.hidden(),
-    }),
+    // jewelry_img_url: fields.url({
+    //   required: validators.required("Product image is required"),
+    //   errorAfterField: true,
+    //   validators: [validators.url()],
+    //   widget: widgets.hidden(),
+    // }),
+    // jewelry_thumbnail_url: fields.url({
+    //   widget: widgets.hidden(),
+    // }),
   });
 };
 
