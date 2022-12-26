@@ -42,6 +42,16 @@
               <td>{{this.design}}</td>
               <td>{{this.created_date}}</td>
               <td>Left: {{this.stock}} <br /> Sold:{{this.sold}}</td>
+              <td>
+                <a
+                  href="/products/{{this.id}}/update"
+                  class="btn btn-primary btn-sm mt-2"
+                >Update</a>
+                <a
+                  href="/products/{{this.id}}/delete"
+                  class="btn btn-danger btn-sm mt-2"
+                >Delete</a>
+              </td>
             </tr>
           {{/each}}
         </tbody>

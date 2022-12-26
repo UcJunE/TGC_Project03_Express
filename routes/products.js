@@ -117,4 +117,30 @@ router.post("/:product_id/update", async (req, res) => {
   });
 });
 
+//handing del
+router.get("/:product_id/delete", async (req, res) => {
+  const product_id = req.params.product_id;
+
+  const product = await Jewelry.where({
+    id: product_id,
+  }).fetch({
+    require: true,
+  });
+
+  res.render("products/delete", {
+    product: product.toJSON(),
+  });
+});
+
+//handling del req
+router.post("/:product_id/delete", async (req, res) => {
+  const product = await Jewelry.where({
+    id: req.params.product_id,
+  }).fetch({
+    require: true,
+  });
+  await product.destroy();
+  res.redirect("/products");
+});
+
 module.exports = router;
