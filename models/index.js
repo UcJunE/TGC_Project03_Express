@@ -5,6 +5,9 @@ const Jewelry = bookshelf.model("Jewelry", {
   color: function () {
     return this.belongsTo(Color);
   },
+  materials: function () {
+    return this.belongsToMany(Material, "jewelries_materials", "jewel_id");
+  },
 });
 
 const Color = bookshelf.model("Color", {
@@ -13,4 +16,11 @@ const Color = bookshelf.model("Color", {
     return this.hasMany(Jewelry);
   },
 });
-module.exports = { Jewelry, Color };
+
+const Material = bookshelf.model("Material", {
+  tableName: "materials",
+  jewelry: function () {
+    return this.belongsToMany(Jewelry);
+  },
+});
+module.exports = { Jewelry, Color, Material };

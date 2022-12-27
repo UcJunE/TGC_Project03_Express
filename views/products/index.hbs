@@ -8,13 +8,13 @@
           <th>Product Image</th>
           <th>Color</th>
           <th>Description</th>
+          <th>Material</th>
           <th>Cost</th>
           <th>Weight</th>
           <th>Dimension</th>
           <th>Design</th>
           <th>Date Created</th>
           <th>Stock Balance</th>
-
         </tr>
         <tbody>
           {{#each products}}
@@ -32,10 +32,18 @@
                   style="width: 130px;"
                 />
               </td>
-              <td>{{this.color_id}}</td>
+              <td>{{this.color.name}}</td>
               <td>
                 {{this.description}}
               </td>
+              <td>
+                {{#each this.materials}}
+                  <span
+                    class="badge bg-primary mb-1"
+                  >{{this.material_type}}</span>
+                {{/each}}
+              </td>
+
               <td>${{this.cost}}</td>
               <td>{{this.weight}}</td>
               <td>{{this.width}} mm(width)x{{this.height}}mm (height)</td>

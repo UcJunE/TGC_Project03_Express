@@ -44,7 +44,7 @@ const bootstrapField = function (name, object) {
 };
 
 //create form
-const createProductForm = (colors) => {
+const createProductForm = (colors, materials) => {
   return forms.create({
     name: fields.string({
       label: "Product Name",
@@ -83,6 +83,16 @@ const createProductForm = (colors) => {
       errorAfterField: true,
       widget: widgets.select(),
       choices: colors,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    materials: fields.string({
+      label: "Material",
+      required: true,
+      errorAfterField: true,
+      widget: widgets.multipleSelect(),
+      choices: materials,
       cssClasses: {
         label: ["form-label"],
       },
