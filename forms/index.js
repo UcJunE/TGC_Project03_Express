@@ -147,7 +147,85 @@ const createProductForm = (colors, materials) => {
   });
 };
 
+//creat user form
+const createRegistrationForm = () => {
+  return forms.create({
+    name: fields.string({
+      label: "Full Name",
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.maxlength(100)],
+    }),
+    username: fields.string({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.maxlength(100)],
+    }),
+    email: fields.email({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.maxlength(255)],
+    }),
+    password: fields.password({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.maxlength(100)],
+    }),
+    confirm_password: fields.password({
+      required: validators.required("Please re-enter password"),
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+      validators: [validators.matchField("password")],
+    }),
+    contact_number: fields.string({
+      required: true,
+      errorAfterField: true,
+      widget: widgets.tel(),
+      validators: [validators.maxlength(15)],
+    }),
+    created_date: fields.date({
+      widget: widgets.hidden(),
+    }),
+  });
+};
+
+//create login form
+const createLoginForm = () => {
+  return forms.create({
+    email: fields.string({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+    password: fields.password({
+      required: true,
+      errorAfterField: true,
+      cssClasses: {
+        label: ["form-label"],
+      },
+    }),
+  });
+};
+
 module.exports = {
   createProductForm,
+  createRegistrationForm,
+  createLoginForm,
   bootstrapField,
 };

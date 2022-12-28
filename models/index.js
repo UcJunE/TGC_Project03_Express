@@ -23,4 +23,19 @@ const Material = bookshelf.model("Material", {
     return this.belongsToMany(Jewelry);
   },
 });
-module.exports = { Jewelry, Color, Material };
+
+// ---- user -----
+const User = bookshelf.model("User", {
+  tableName: "users",
+  role: function () {
+    return this.belongsTo("Role");
+  },
+});
+
+const Role = bookshelf.model("Role", {
+  tableName: "roles",
+  user: function () {
+    return this.hasMany("User");
+  },
+});
+module.exports = { Jewelry, Color, Material, User, Role };

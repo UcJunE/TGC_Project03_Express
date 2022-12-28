@@ -2,6 +2,7 @@ const express = require("express");
 const async = require("hbs/lib/async");
 const router = express.Router();
 const { bootstrapField, createProductForm } = require("../forms");
+const { checkIfAuthenticated } = require("../middlewares");
 
 const { Jewelry, Color, Material } = require("../models");
 
@@ -11,7 +12,7 @@ router.get("/", async (req, res) => {
     withRelated: ["color", "materials"],
   });
 
-  let a = products.toJSON();
+  // let a = products.toJSON();
   // console.log(products.toJSON());
   // console.log(a[7]);
   // let materials = await Material.fetchAll().map((material) => {
@@ -24,7 +25,7 @@ router.get("/", async (req, res) => {
 });
 
 //display create form
-router.get("/create", async (req, res) => {
+router.get("/create", checkIfAuthenticated, async (req, res) => {
   let colors = await Color.fetchAll().map((color) => {
     return [color.get("id"), color.get("name")];
   });
@@ -39,7 +40,7 @@ router.get("/create", async (req, res) => {
 });
 
 //handling data from client
-router.post("/create", async (req, res) => {
+router.post("/create", checkIfAuthenticated, async (req, res) => {
   let colors = await Color.fetchAll().map((color) => {
     return [color.get("id"), color.get("name")];
   });
@@ -59,7 +60,10 @@ router.post("/create", async (req, res) => {
       if (materials) {
         await product.materials().attach(materials.split(","));
       }
-
+      req.flash(
+        "success_messages",
+        `New Product ${product.get("name")} has been created`
+      );
       res.redirect("/products");
     },
     error: async (form) => {
@@ -128,7 +132,7 @@ router.post("/:product_id/update", async (req, res) => {
     withRelated: ["color", "materials"],
   });
 
-  // console.log(product);
+  console.log(product);
   const productForm = createProductForm(colors, materials);
 
   productForm.handle(req, {
@@ -143,17 +147,18 @@ router.post("/:product_id/update", async (req, res) => {
 
       let { materials, ...updateFormData } = form.data;
       updateFormData.created_date = product.get("created_date");
-    
+
       console.log(updateFormData);
       product.set(updateFormData);
       await product.save();
 
       let materialIds = materials.split(",");
       let existingMaterialIds = await product.related("materials").pluck("id");
-
+      console.log(materialIds)
+      console.log(existingMaterialIds);
       //remove all the mat data aren't selected
       let toRemove = existingMaterialIds.filter(
-        (id) => existingMaterialIds.includes(id) === false
+        (id) => materialIds.includes(id) === false
       );
 
       await product.materials().detach(toRemove);
