@@ -1,4 +1,6 @@
 const forms = require("forms");
+const { trigger } = require("../bookshelf");
+const { Jewelry } = require("../models");
 
 //setup forms
 const fields = forms.fields;
@@ -223,9 +225,60 @@ const createLoginForm = () => {
   });
 };
 
+//create search form
+const createSearchForm = (jewelries = [], colors = [], materials = []) => {
+  return forms.create({
+    id: fields.string({
+      label: "Product ID",
+      required: false,
+      errorAfterField: true,
+      validators: [validators.integer()],
+    }),
+    product: fields.string({
+      label: "Product Name",
+      required: false,
+      errorAfterField: true,
+    }),
+    color_id: fields.string({
+      label: "Color",
+      required: false,
+      errorAfterField: true,
+      widget: widgets.select(),
+      choices: colors,
+    }),
+    materials: fields.string({
+      label: "Material",
+      required: false,
+      errorAfterField: true,
+      widget: widgets.multipleSelect(),
+      choices: materials,
+    }),
+    design: fields.string({
+      label: "Design",
+      required: false,
+      errorAfterField: true,
+      widget: widgets.select(),
+      choices: jewelries,
+    }),
+    min_cost: fields.string({
+      label: "Minimum Cost ($)",
+      required: false,
+      errorAfterField: true,
+      validators: [validators.integer()],
+    }),
+    max_cost: fields.string({
+      label: "Maximum Cost ($)",
+      required: false,
+      errorAfterField: true,
+      validators: [validators.integer()],
+    }),
+  });
+};
+
 module.exports = {
   createProductForm,
   createRegistrationForm,
   createLoginForm,
+  createSearchForm,
   bootstrapField,
 };

@@ -1,26 +1,99 @@
 const express = require("express");
 const async = require("hbs/lib/async");
 const router = express.Router();
-const { bootstrapField, createProductForm } = require("../forms");
+const {
+  bootstrapField,
+  createProductForm,
+  createSearchForm,
+} = require("../forms");
 const { checkIfAuthenticated } = require("../middlewares");
 
 const { Jewelry, Color, Material } = require("../models");
 
 //display all products
 router.get("/", async (req, res) => {
-  let products = await Jewelry.collection().fetch({
-    withRelated: ["color", "materials"],
+  // let products = await Jewelry.collection().fetch({
+  //   withRelated: ["color", "materials"],
+  // });
+  // 1. get all the categories
+  const allMaterials = await Material.fetchAll().map((material) => {
+    return [material.get("id"), material.get("material_type")];
   });
 
-  // let a = products.toJSON();
-  // console.log(products.toJSON());
-  // console.log(a[7]);
-  // let materials = await Material.fetchAll().map((material) => {
-  //   return [material.get("id"), material.get("material_type")];
-  // });
+  // console.log(allMaterials);
+  allMaterials.unshift([0, "----"]);
 
-  res.render("products/index", {
-    products: products.toJSON(),
+  let colors = await Color.fetchAll().map((color) => {
+    return [color.get("id"), color.get("name")];
+  });
+
+  colors.unshift([0, "----"]);
+  let products = await Jewelry.fetchAll().map((product) => {
+    return [product.get("id"), product.get("design")];
+  });
+  // console.log(products);
+
+  // console.log(colors);
+  let searchForm = createSearchForm(products, colors, allMaterials);
+  let q = Jewelry.collection();
+
+  searchForm.handle(req, {
+    empty: async (form) => {
+      let products = await q.fetch({
+        withRelated: ["color", "materials"],
+      });
+
+      // console.log(products.toJSON());
+      res.render("products/index", {
+        products: products.toJSON(),
+        form: form.toHTML(bootstrapField),
+      });
+    },
+    error: async (form) => {
+      let products = await q.fetch({
+        withRelated: ["color", "materials"],
+      });
+
+      // console.log(products.toJSON());
+      res.render("products/index", {
+        products: products.toJSON(),
+        form: form.toHTML(bootstrapField),
+      });
+    },
+    success: async (form) => {
+      if (form.data.name) {
+        q.where("name", "like", "%" + form.data.name + "%");
+      }
+      if (form.data.id && form.data.id != "0") {
+        q.where("jewelries.id", "=", form.data.id);
+      }
+      if (form.data.color_id) {
+        q.where("color_id", "=", form.data.color_id);
+      }
+      if (form.data.materials) {
+        q.query(
+          "join",
+          "jewelries_materials",
+          "jewelries.id",
+          "jewel_id"
+        ).where("material_id", "in", form.data.materials.split(","));
+      }
+      if (form.data.min_cost) {
+        q.where("cost", ">=", form.data.min_cost);
+      }
+      if (form.data.max_cost) {
+        q.where("cost", "<=", form.data.max_cost);
+      }
+
+      let products = await q.fetch({
+        withRelated: ["color", "materials"],
+      });
+
+      res.render("products/index", {
+        products: products.toJSON(),
+        form: form.toHTML(bootstrapField),
+      });
+    },
   });
 });
 
@@ -107,7 +180,9 @@ router.get("/:product_id/update", async (req, res) => {
   productForm.fields.height.value = product.get("height");
   productForm.fields.stock.value = product.get("stock");
   productForm.fields.jewelry_img_url.value = product.get("jewelry_img_url");
-  productForm.fields.jewelry_thumbnail_url.value = product.get("jewelry_thumbnail_url");
+  productForm.fields.jewelry_thumbnail_url.value = product.get(
+    "jewelry_thumbnail_url"
+  );
   //fill in multi select value for  materials
   let selectedMaterials = await product.related("materials").pluck("id");
   // console.log(selectedMaterials);
