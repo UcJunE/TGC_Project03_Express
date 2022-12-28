@@ -135,15 +135,15 @@ const createProductForm = (colors, materials) => {
     created_date: fields.date({
       widget: widgets.hidden(),
     }),
-    // jewelry_img_url: fields.url({
-    //   required: validators.required("Product image is required"),
-    //   errorAfterField: true,
-    //   validators: [validators.url()],
-    //   widget: widgets.hidden(),
-    // }),
-    // jewelry_thumbnail_url: fields.url({
-    //   widget: widgets.hidden(),
-    // }),
+    jewelry_img_url: fields.url({
+      required: validators.required("Product image is required"),
+      errorAfterField: true,
+      validators: [validators.url()],
+      widget: widgets.hidden(),
+    }),
+    jewelry_thumbnail_url: fields.url({
+      widget: widgets.hidden(),
+    }),
   });
 };
 

@@ -36,6 +36,9 @@ router.get("/create", checkIfAuthenticated, async (req, res) => {
 
   res.render("products/create", {
     form: productForm.toHTML(bootstrapField),
+    cloudinaryName: process.env.CLOUDINARY_NAME,
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+    cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
   });
 });
 
@@ -103,7 +106,8 @@ router.get("/:product_id/update", async (req, res) => {
   productForm.fields.width.value = product.get("width");
   productForm.fields.height.value = product.get("height");
   productForm.fields.stock.value = product.get("stock");
-
+  productForm.fields.jewelry_img_url.value = product.get("jewelry_img_url");
+  productForm.fields.jewelry_thumbnail_url.value = product.get("jewelry_thumbnail_url");
   //fill in multi select value for  materials
   let selectedMaterials = await product.related("materials").pluck("id");
   // console.log(selectedMaterials);
@@ -112,6 +116,9 @@ router.get("/:product_id/update", async (req, res) => {
   res.render("products/update", {
     form: productForm.toHTML(bootstrapField),
     product: product.toJSON(),
+    cloudinaryName: process.env.CLOUDINARY_NAME,
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+    cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
   });
 });
 
@@ -154,7 +161,7 @@ router.post("/:product_id/update", async (req, res) => {
 
       let materialIds = materials.split(",");
       let existingMaterialIds = await product.related("materials").pluck("id");
-      console.log(materialIds)
+      console.log(materialIds);
       console.log(existingMaterialIds);
       //remove all the mat data aren't selected
       let toRemove = existingMaterialIds.filter(

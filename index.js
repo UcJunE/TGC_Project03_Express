@@ -73,10 +73,12 @@ app.use((req, res, next) => {
 // import in router
 const accountRoutes = require("./routes/account");
 const productsRoutes = require("./routes/products");
+const cloudinaryRoutes = require("./routes/cloudinary");
 
 async function main() {
   app.use("/", accountRoutes);
   app.use("/products", productsRoutes);
+  app.use("/cloudinary", cloudinaryRoutes);
 }
 
 main();
