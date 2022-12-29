@@ -234,7 +234,7 @@ const createSearchForm = (jewelries = [], colors = [], materials = []) => {
       errorAfterField: true,
       validators: [validators.integer()],
     }),
-    product: fields.string({
+    name: fields.string({
       label: "Product Name",
       required: false,
       errorAfterField: true,

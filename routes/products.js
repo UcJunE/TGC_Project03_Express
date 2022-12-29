@@ -23,14 +23,20 @@ router.get("/", async (req, res) => {
 
   let colors = await dataLayer.getAllColors();
 
-  colors.unshift([0, "----"]);
+  colors.unshift([0, "All Colors"]);
+  const productDesigns = {};
+  const filteredProducts = [];
   let products = await Jewelry.fetchAll().map((product) => {
-    return [product.get("id"), product.get("design")];
+    if (!productDesigns[product.get("design")]) {
+      productDesigns[product.get("design")] = true;
+      filteredProducts.push([product.get("design"), product.get("design")]);
+    }
   });
-  // console.log(products);
+  filteredProducts.unshift([0, "----"]);
+  // console.log("products", filteredProducts);
 
   // console.log(colors);
-  let searchForm = createSearchForm(products, colors, allMaterials);
+  let searchForm = createSearchForm(filteredProducts, colors, allMaterials);
   let q = Jewelry.collection();
 
   searchForm.handle(req, {
@@ -63,16 +69,19 @@ router.get("/", async (req, res) => {
       if (form.data.id && form.data.id != "0") {
         q.where("jewelries.id", "=", form.data.id);
       }
-      if (form.data.color_id) {
+      if (form.data.color_id && form.data.color_id !== "0") {
         q.where("color_id", "=", form.data.color_id);
       }
-      if (form.data.materials) {
+      if (form.data.materials && form.data.materials !== "0") {
         q.query(
           "join",
           "jewelries_materials",
           "jewelries.id",
           "jewel_id"
         ).where("material_id", "in", form.data.materials.split(","));
+      }
+      if (form.data.design) {
+        q.where("design", "=", form.data.design);
       }
       if (form.data.min_cost) {
         q.where("cost", ">=", form.data.min_cost);
