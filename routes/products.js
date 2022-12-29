@@ -7,7 +7,7 @@ const {
   createSearchForm,
 } = require("../forms");
 const { checkIfAuthenticated } = require("../middlewares");
-
+const dataLayer = require("../dal/products");
 const { Jewelry, Color, Material } = require("../models");
 
 //display all products
@@ -16,16 +16,12 @@ router.get("/", async (req, res) => {
   //   withRelated: ["color", "materials"],
   // });
   // 1. get all the categories
-  const allMaterials = await Material.fetchAll().map((material) => {
-    return [material.get("id"), material.get("material_type")];
-  });
+  const allMaterials = await dataLayer.getAllMaterials();
 
   // console.log(allMaterials);
   allMaterials.unshift([0, "----"]);
 
-  let colors = await Color.fetchAll().map((color) => {
-    return [color.get("id"), color.get("name")];
-  });
+  let colors = await dataLayer.getAllColors();
 
   colors.unshift([0, "----"]);
   let products = await Jewelry.fetchAll().map((product) => {
@@ -99,12 +95,8 @@ router.get("/", async (req, res) => {
 
 //display create form
 router.get("/create", checkIfAuthenticated, async (req, res) => {
-  let colors = await Color.fetchAll().map((color) => {
-    return [color.get("id"), color.get("name")];
-  });
-  let materials = await Material.fetchAll().map((material) => {
-    return [material.get("id"), material.get("material_type")];
-  });
+  let colors = await dataLayer.getAllColors();
+  let materials = await dataLayer.getAllMaterials();
   const productForm = createProductForm(colors, materials);
 
   res.render("products/create", {
@@ -117,12 +109,8 @@ router.get("/create", checkIfAuthenticated, async (req, res) => {
 
 //handling data from client
 router.post("/create", checkIfAuthenticated, async (req, res) => {
-  let colors = await Color.fetchAll().map((color) => {
-    return [color.get("id"), color.get("name")];
-  });
-  let materials = await Material.fetchAll().map((material) => {
-    return [material.get("id"), material.get("material_type")];
-  });
+  let colors = await dataLayer.getAllColors();
+  let materials = await dataLayer.getAllMaterials();
   const productForm = createProductForm(colors, materials);
   productForm.handle(req, {
     success: async (form) => {
@@ -154,19 +142,10 @@ router.post("/create", checkIfAuthenticated, async (req, res) => {
 router.get("/:product_id/update", async (req, res) => {
   const product_id = req.params.product_id;
 
-  const product = await Jewelry.where({
-    id: parseInt(product_id),
-  }).fetch({
-    require: true,
-    withRelated: ["materials"],
-  });
+  const product = await dataLayer.getProductById(product_id);
 
-  let colors = await Color.fetchAll().map((color) => {
-    return [color.get("id"), color.get("name")];
-  });
-  let materials = await Material.fetchAll().map((material) => {
-    return [material.get("id"), material.get("material_type")];
-  });
+  let colors = await dataLayer.getAllColors();
+  let materials = await dataLayer.getAllMaterials();
   const productForm = createProductForm(colors, materials);
 
   // fill in the existing values
@@ -201,18 +180,9 @@ router.get("/:product_id/update", async (req, res) => {
 router.post("/:product_id/update", async (req, res) => {
   const product_id = req.params.product_id;
 
-  let colors = await Color.fetchAll().map((color) => {
-    return [color.get("id"), color.get("name")];
-  });
-  let materials = await Material.fetchAll().map((material) => {
-    return [material.get("id"), material.get("material_type")];
-  });
-  const product = await Jewelry.where({
-    id: product_id,
-  }).fetch({
-    require: true,
-    withRelated: ["color", "materials"],
-  });
+  let colors = await dataLayer.getAllColors();
+  let materials = await dataLayer.getAllMaterials();
+  const product = await dataLayer.getProductById(product_id);
 
   console.log(product);
   const productForm = createProductForm(colors, materials);
@@ -262,11 +232,7 @@ router.post("/:product_id/update", async (req, res) => {
 router.get("/:product_id/delete", async (req, res) => {
   const product_id = req.params.product_id;
 
-  const product = await Jewelry.where({
-    id: product_id,
-  }).fetch({
-    require: true,
-  });
+  const product = await dataLayer.getProductById(req.para);
 
   res.render("products/delete", {
     product: product.toJSON(),
@@ -275,11 +241,7 @@ router.get("/:product_id/delete", async (req, res) => {
 
 //handling del req
 router.post("/:product_id/delete", async (req, res) => {
-  const product = await Jewelry.where({
-    id: req.params.product_id,
-  }).fetch({
-    require: true,
-  });
+  const product = await dataLayer.getProductById(req.params.product_id);
   await product.destroy();
   res.redirect("/products");
 });
