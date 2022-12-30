@@ -30,6 +30,12 @@ const User = bookshelf.model("User", {
   role: function () {
     return this.belongsTo("Role");
   },
+  cartItems: function () {
+    return this.hasMany("CartItem");
+  },
+  orders: function () {
+    return this.hasMany("Order");
+  },
 });
 
 const Role = bookshelf.model("Role", {
@@ -38,4 +44,19 @@ const Role = bookshelf.model("Role", {
     return this.hasMany("User");
   },
 });
-module.exports = { Jewelry, Color, Material, User, Role };
+
+//carts
+const CartItem = bookshelf.model("CartItem", {
+  tableName: "cart_items",
+  jewelry: function () {
+    return this.belongsTo("Jewelry", "product_id");
+  },
+  user: function () {
+    return this.belongsTo("User");
+  },
+  materials: function () {
+    return this.belongsToMany(Material, "jewelries_materials", "jewel_id");
+  },
+});
+
+module.exports = { Jewelry, Color, Material, User, Role, CartItem };
