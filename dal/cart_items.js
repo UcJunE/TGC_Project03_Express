@@ -9,7 +9,6 @@ const getCartItem = async (userId) => {
     .fetch({
       require: false,
       withRelated: ["user", "jewelry", "jewelry.color", "materials"],
-      // how doest this work ? 
     });
 };
 
@@ -57,5 +56,5 @@ module.exports = {
   getCartItem,
   createCartItem,
   deleteCartItem,
-  updateCartItem
+  updateCartItem,
 };

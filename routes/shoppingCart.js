@@ -7,9 +7,6 @@ const CartServices = require("../services/cart_services");
 
 router.get("/", checkIfAuthenticated, async (req, res) => {
   let cart = new CartServices(req.session.user.id);
-  // console.log(cart);
-  let a = (await cart.getCartItem()).toJSON();
-  // console.log(a);
   res.render("carts/index", {
     shoppingCart: (await cart.getCartItem()).toJSON(),
   });

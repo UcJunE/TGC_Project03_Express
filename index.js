@@ -29,7 +29,7 @@ app.use(
 // enable CSRF
 const csurfInstance = csrf();
 app.use(function (req, res, next) {
-  console.log("checking for csrf exclusion");
+  // console.log("checking for csrf exclusion");
   // exclude whatever url we want from CSRF protection
   if (
     req.url === "/checkout/process_payment" ||
@@ -90,6 +90,7 @@ const checkoutRoutes = require("./routes/checkout");
 
 const api = {
   products: require("./routes/api/products"),
+  shoppingCart: require("./routes/api/shoppingCart"),
 };
 
 async function main() {
@@ -99,6 +100,7 @@ async function main() {
   app.use("/cart", shoppingCartRoutes);
   app.use("/checkout", checkoutRoutes);
   app.use("/api/products", express.json(), api.products);
+  app.use("/api/shoppingcart", express.json(), api.shoppingCart);
 }
 
 main();
