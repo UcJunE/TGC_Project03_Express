@@ -38,7 +38,7 @@ router.get("/", async (req, res) => {
   // console.log(colors);
   let searchForm = createSearchForm(filteredProducts, colors, allMaterials);
   let q = Jewelry.collection();
-
+  // console.log(q);
   searchForm.handle(req, {
     empty: async (form) => {
       let products = await q.fetch({

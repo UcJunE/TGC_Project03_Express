@@ -23,7 +23,15 @@ const getProductById = async (productId) => {
     id: parseInt(productId),
   }).fetch({
     require: true,
-    withRelated: ["color","materials"],
+    withRelated: ["color", "materials"],
+  });
+};
+
+//why when i use .collection().fetchALl . it stated that fetchAll is not a function??
+
+const getAllProducts = async () => {
+  return await Jewelry.fetchAll({
+    withRelated: ["color", "materials"],
   });
 };
 
@@ -32,4 +40,5 @@ module.exports = {
   getAllColors,
   getAllMaterials,
   getProductById,
+  getAllProducts,
 };
