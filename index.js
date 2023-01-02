@@ -27,7 +27,15 @@ app.use(
 );
 
 // enable CSRF
-app.use(csrf());
+const csurfInstance = csrf();
+app.use(function (req, res, next) {
+  console.log("checking for csrf exclusion");
+  // exclude whatever url we want from CSRF protection
+  if (req.url === "/checkout/process_payment") {
+    return next();
+  }
+  csurfInstance(req, res, next);
+});
 
 // Share CSRF with hbs files
 app.use(function (req, res, next) {
@@ -75,12 +83,14 @@ const accountRoutes = require("./routes/account");
 const productsRoutes = require("./routes/products");
 const cloudinaryRoutes = require("./routes/cloudinary");
 const shoppingCartRoutes = require("./routes/shoppingCart");
+const checkoutRoutes = require("./routes/checkout");
 
 async function main() {
   app.use("/", accountRoutes);
   app.use("/products", productsRoutes);
   app.use("/cloudinary", cloudinaryRoutes);
   app.use("/cart", shoppingCartRoutes);
+  app.use("/checkout", checkoutRoutes);
 }
 
 main();
