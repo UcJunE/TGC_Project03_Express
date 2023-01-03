@@ -165,7 +165,7 @@ router.post("/refresh", checkIfAuthenticatedJWT, async function (req, res) {
             accessToken: accessToken,
           });
         } else {
-          res.status(401);
+          res.status(400);
           res.json({
             error: "No token found",
           });
@@ -182,23 +182,44 @@ router.post("/refresh", checkIfAuthenticatedJWT, async function (req, res) {
 
 router.post("/logout", async function (req, res) {
   const refreshToken = req.body.refreshToken;
+
   if (refreshToken) {
+    //add refresh token to black list
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       async function (err, tokenData) {
-        // Add refresh token to the black list
         if (!err) {
-          await dataLayer.addBlacklistedToken(refreshToken);
-          res.status(200);
+          //check if token is already blacklist
+          const blacklistedToken = await blacklistedToken
+            .where({
+              blacklisted_token: refreshToken,
+            })
+            .fetch({
+              require: false,
+            });
+
+          //if the blaclisted token is not null, means it exists
+          if (blacklistedToken) {
+            res.status(400);
+            res.json({
+              error: "Refresh token has been blacklisted",
+            });
+            return;
+          }
+          // add to blacklist
+          const token = new BlacklistedToken();
+          token.set("blacklisted_token", refreshToken);
+          token.get("created_date", new Date());
+          await token.save();
           res.json({
-            message: "Successfully logged out",
+            message: "logged out",
           });
         }
       }
     );
   } else {
-    res.status(400);
+    res.status(401);
     res.json({
       error: "No refresh token found",
     });
