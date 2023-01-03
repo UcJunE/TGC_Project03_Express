@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const crypto = require("crypto");
 const dataLayer = require("../dal/account");
 const { User } = require("../models");
 const {
@@ -10,12 +9,7 @@ const {
 } = require("../forms");
 const async = require("hbs/lib/async");
 
-//hashing the password
-const getHashedPassword = (password) => {
-  const sha256 = crypto.createHash("sha256");
-  const hash = sha256.update(password).digest("base64");
-  return hash;
-};
+const { getHashedPassword } = require("../utilities");
 
 const { checkIfAuthenticated } = require("../middlewares");
 
@@ -23,7 +17,7 @@ router.get("/", (req, res) => {
   res.render("accounts/home");
 });
 
-router.get("/register", (req, res) => {
+router.get("/register", checkIfAuthenticated, (req, res) => {
   const registerForm = createRegistrationForm();
 
   res.render("accounts/register", {
