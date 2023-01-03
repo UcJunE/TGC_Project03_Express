@@ -193,7 +193,7 @@ router.post("/:product_id/update", async (req, res) => {
   let materials = await dataLayer.getAllMaterials();
   const product = await dataLayer.getProductById(product_id);
 
-  console.log(product);
+  // console.log(product);
   const productForm = createProductForm(colors, materials);
 
   productForm.handle(req, {
@@ -209,7 +209,7 @@ router.post("/:product_id/update", async (req, res) => {
       let { materials, ...updateFormData } = form.data;
       updateFormData.created_date = product.get("created_date");
 
-      console.log(updateFormData);
+      // console.log(updateFormData);
       product.set(updateFormData);
       await product.save();
 

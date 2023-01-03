@@ -1,16 +1,17 @@
 const { json } = require("express");
 const express = require("express");
+const { CartItem } = require("../../models");
 
 const router = express.Router();
 
-const CartServices = require("../services/cart_services");
+const CartServices = require("../../services/cart_services");
 const Stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 router.get("/", async (req, res) => {
   const cart = new CartServices(req.session.user.id);
 
   let items = await cart.getCartItem();
-
+  // console.log(items.toJSON());
   //create line items , what is line item ?  line item is a single entry on an invoice
   let lineItems = [];
 
@@ -34,11 +35,16 @@ router.get("/", async (req, res) => {
     }
     lineItems.push(lineItem);
     //save the quatity data along with the product id
+    // console.log("this is line item ", lineItem);
+    // console.log("this is the jewelry id", i.get("product_id"));
+    // console.log("this is userId ", i.get("user_id"));
     meta.push({
-      product_id: i.get("jewelry.id"),
+      product_id: i.get("product_id"),
+      user_id: i.get("user_id"),
       quantity: i.get("quantity"),
     });
   }
+  console.log("this is metadata", meta);
   //step 2 -create stripe payment
   let metaData = JSON.stringify(meta);
 
@@ -98,7 +104,7 @@ router.get("/", async (req, res) => {
       },
     ],
   };
-  // step 3: register the session
+  // step 3: register the payment session
   let stripeSession = await Stripe.checkout.sessions.create(payment);
   // console.log("hello session", stripeSession);
   res.render("checkout/checkout", {
@@ -107,37 +113,4 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post(
-  "/process_payment",
-  express.raw({ type: "application/json" }),
-  async (req, res) => {
-    let payload = req.body;
-    let endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
-    let sigHeader = req.headers["stripe-signature"];
-    let event;
-    console.log("fuck me from stripe number before try");
-    console.log(payload);
-    console.log(sigHeader);
-    console.log(endpointSecret);
-    try {
-      event = Stripe.webhooks.constructEvent(
-        payload,
-        sigHeader,
-        endpointSecret
-      );
-    } catch (e) {
-      res.send({
-        error: e.message,
-      });
-      console.log(e.message);
-    }
-    if (event.type == "checkout.session.completed") {
-      let stripeSession = event.data.object;
-      console.log(stripeSession);
-      console.log("fuck me from stripe");
-      // process stripeSession
-    }
-    res.send({ received: true });
-  }
-);
 module.exports = router;
