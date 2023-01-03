@@ -41,7 +41,7 @@ router.post("/register", (req, res) => {
       let { confirm_password, ...userData } = form.data;
       userData = { ...userData, created_date, password };
 
-      console.log({ ...userData });
+      // console.log({ ...userData });
       const User = await dataLayer.addNewUser(userData, 2);
       req.flash("success_messages", "User signed up successfully!");
       res.redirect("/login");

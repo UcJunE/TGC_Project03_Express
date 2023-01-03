@@ -100,6 +100,7 @@ router.get("/", async (req, res) => {
   };
   // step 3: register the session
   let stripeSession = await Stripe.checkout.sessions.create(payment);
+  // console.log("hello session", stripeSession);
   res.render("checkout/checkout", {
     sessionId: stripeSession.id, // 4. Get the ID of the session
     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
@@ -114,6 +115,10 @@ router.post(
     let endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
     let sigHeader = req.headers["stripe-signature"];
     let event;
+    console.log("fuck me from stripe number before try");
+    console.log(payload);
+    console.log(sigHeader);
+    console.log(endpointSecret);
     try {
       event = Stripe.webhooks.constructEvent(
         payload,
@@ -129,6 +134,7 @@ router.post(
     if (event.type == "checkout.session.completed") {
       let stripeSession = event.data.object;
       console.log(stripeSession);
+      console.log("fuck me from stripe");
       // process stripeSession
     }
     res.send({ received: true });

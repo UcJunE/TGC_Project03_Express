@@ -59,4 +59,53 @@ const CartItem = bookshelf.model("CartItem", {
   },
 });
 
-module.exports = { Jewelry, Color, Material, User, Role, CartItem };
+//orders
+const Order = bookshelf.model("Order", {
+  tableName: "orders",
+  user: function () {
+    return this.belongsTo("User");
+  },
+  orderStatus: function () {
+    return this.belongsTo("OrderStatus");
+  },
+  orderItems: function () {
+    return this.hasMany("OrderItem");
+  },
+});
+
+const OrderItem = bookshelf.model("OrderItem", {
+  tableName: "ordered_items",
+  order: function () {
+    return this.belongsTo("Order");
+  },
+  jewelry: function () {
+    return this.belongsTo("Jewelry", "product_id");
+  },
+  materials: function () {
+    return this.belongsToMany(Material, "jewelries_materials", "jewel_id");
+  },
+});
+
+const OrderStatus = bookshelf.model("OrderStatus", {
+  tableName: "orders_status",
+  orders: function () {
+    return this.hasMany("Order");
+  },
+});
+
+const BlacklistedToken = bookshelf.model("BlacklistedToken", {
+  tableName: "blacklisted_tokens",
+});
+
+module.exports = {
+  Jewelry,
+  Color,
+  Material,
+  User,
+  Role,
+  CartItem,
+  Order,
+  OrderStatus,
+  OrderItem,
+  BlacklistedToken,
+};
