@@ -10,6 +10,7 @@ router.get("/", checkIfAuthenticated, async (req, res) => {
   res.render("carts/index", {
     shoppingCart: (await cart.getCartItem()).toJSON(),
   });
+  // console.log( (await cart.getCartItem()).toJSON());
 });
 
 router.get("/:product_id/add", checkIfAuthenticated, async (req, res) => {

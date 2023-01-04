@@ -27,12 +27,22 @@ const getProductById = async (productId) => {
   });
 };
 
-//why when i use .collection().fetchALl . it stated that fetchAll is not a function??
-
 const getAllProducts = async () => {
   return await Jewelry.fetchAll({
     withRelated: ["color", "materials"],
   });
+};
+
+const updateProduct = async (productId, formData) => {
+  const product = await getProductById(productId);
+
+  if (!product) {
+    return;
+  } else {
+    product.set(formData);
+    await product.save();
+    return true;
+  }
 };
 
 module.exports = {
@@ -41,4 +51,5 @@ module.exports = {
   getAllMaterials,
   getProductById,
   getAllProducts,
+  updateProduct,
 };

@@ -44,7 +44,7 @@ router.get("/", async (req, res) => {
       quantity: i.get("quantity"),
     });
   }
-  console.log("this is metadata", meta);
+  // console.log("this is metadata", meta);
   //step 2 -create stripe payment
   let metaData = JSON.stringify(meta);
 
@@ -55,6 +55,10 @@ router.get("/", async (req, res) => {
     success_url:
       process.env.STRIPE_SUCCESS_URL + "?sessionId={CHECKOUT_SESSION_ID}",
     cancel_url: process.env.STRIPE_ERROR_URL,
+    invoice_creation: { enabled: true },
+    payment_intent_data: {
+      capture_method: "automatic",
+    },
     metadata: {
       orders: metaData,
     },

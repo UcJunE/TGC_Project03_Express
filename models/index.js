@@ -55,7 +55,7 @@ const CartItem = bookshelf.model("CartItem", {
     return this.belongsTo("User");
   },
   materials: function () {
-    return this.belongsToMany("Material", "jewelries_materials", "jewel_id");
+    return this.belongsToMany("Material", "jewelries_materials", "material_id");
   },
 });
 
@@ -79,7 +79,7 @@ const OrderItem = bookshelf.model("OrderItem", {
     return this.belongsTo("Order");
   },
   jewelry: function () {
-    return this.belongsTo("Jewelry", "product_id", "jewelries.id");
+    return this.belongsTo("Jewelry", "product_id", );
   },
   materials: function () {
     return this.belongsToMany("Material", "jewelries_materials", "jewel_id");

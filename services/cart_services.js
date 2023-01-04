@@ -42,5 +42,8 @@ class CartServices {
   async getCartItem() {
     return await cartDataLayer.getCartItem(this.user_id);
   }
+
+
 }
+
 module.exports = CartServices;

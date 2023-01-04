@@ -10,6 +10,7 @@ const getCartItem = async (userId) => {
       require: false,
       withRelated: ["user", "jewelry", "jewelry.color", "materials"],
     });
+    
 };
 
 const getCartItemByUserAndProduct = async function (userId, productId) {
@@ -18,6 +19,7 @@ const getCartItemByUserAndProduct = async function (userId, productId) {
     product_id: productId,
   }).fetch({
     require: false,
+    withRelated: ["user", "jewelry", "jewelry.color", "materials"]
   });
 
   return cartItem;

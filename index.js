@@ -5,7 +5,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const FileStore = require("session-file-store")(session);
 const csrf = require("csurf");
-const cors = require('cors')
+const cors = require("cors");
 require("dotenv").config();
 
 let app = express();
@@ -98,6 +98,7 @@ const api = {
   shoppingCart: require("./routes/api/shoppingCart"),
   checkout: require("./routes/api/checkout"),
   account: require("./routes/api/account"),
+  stripe: require("./routes/api/stripe"),
 };
 
 async function main() {
@@ -106,10 +107,13 @@ async function main() {
   app.use("/cloudinary", cloudinaryRoutes);
   app.use("/cart", shoppingCartRoutes);
   app.use("/order", ordersRoutes);
+
+  //api routes
   app.use("/api/products", express.json(), api.products);
   app.use("/api/shoppingcart", express.json(), api.shoppingCart);
   app.use("/api/checkout", express.json(), api.checkout);
   app.use("/api/account", express.json(), api.account);
+  app.use("/api/stripe", api.stripe);
 }
 
 main();
