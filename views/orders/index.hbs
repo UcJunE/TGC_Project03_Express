@@ -1,0 +1,85 @@
+{{#extends "base"}}
+  {{#block "content"}}
+    <div class="container">
+      <h1>Orders</h1>
+      <div class="row">
+        <div class="col-12 col-lg-2">
+          <h2>Search</h2>
+          <form method="GET">
+            {{{form}}}
+            <input type="submit" class="btn btn-sm btn-primary mt-2" />
+
+            <a href="/orders" class="btn btn-sm btn-danger mt-2">Clear Search</a>
+          </form>
+        </div>
+
+        <div class="col-12 col-lg-9">
+          <h2>Orders</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Customer Email</th>
+                <th>Total Cost</th>
+                <th>Payment Type</th>
+                <th>Shipping Address</th>
+                <th>Shipping Option</th>
+                <th>Order Date</th>
+                <th>Delivery Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each orders}}
+                <tr>
+                  <td>{{this.id}}</td>
+                  <td>{{capitalizeAll this.user.name}}</td>
+                  <td>{{this.user.email}}</td>
+                  <td>${{divide this.total_amount 100}}</td>
+                  <td>{{capitalize this.payment_mode}}</td>
+                  <td>
+                    {{this.shipping_address_line1}},
+                    <br />
+                    {{#if this.shipping_address_line2}}
+                      {{this.shipping_address_line2}},
+                      <br />
+                    {{/if}}
+                    {{this.shipping_address_postal}},
+                    {{this.shipping_address_country}}
+                  </td>
+                  <td>{{this.shipping_type}}</td>
+                  <td>{{moment
+                      this.order_date
+                      format="dddd, DD MMMM YYYY"
+                    }}</td>
+                  <td>
+                    {{#if this.delivery_date}}
+                      {{moment this.delivery_date format="dddd, DD MMMM YYYY"}}
+                    {{else}}
+                      N/A
+                    {{/if}}
+                  </td>
+                  <td>{{this.orderStatus}}</td>
+                  <td>
+                    <a
+                      href="/order/{{this.id}}/update"
+                      class="btn btn-primary btn-sm mb-3"
+                    >Update</a>
+                    <a
+                      href="{{this.receipt_url}}"
+                      target="_blank"
+                      class="btn btn-secondary btn-sm"
+                    >Receipt</a>
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+  {{/block}}
+{{/extends}}

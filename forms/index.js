@@ -275,10 +275,51 @@ const createSearchForm = (jewelries = [], colors = [], materials = []) => {
   });
 };
 
+const createSearchOrderForm = (orderStatuses) => {
+  return forms.create({
+    id: fields.string({
+      label: "Order ID",
+      required: false,
+      errorAfterField: true,
+      validators: [validators.integer()],
+    }),
+    customer_email: fields.string({
+      label: "Customer Email",
+      required: false,
+      errorAfterField: true,
+    }),
+    order_status_id: fields.string({
+      label: "Order status",
+      required: false,
+      errorAfterField: true,
+      choices: orderStatuses,
+      widget: widgets.select(),
+    }),
+  });
+};
+
+const createUpdateOrderForm = (orderStatus) => {
+  return forms.create({
+    order_status_id: fields.string({
+      label: "Status",
+      required: false,
+      errorAfterField: true,
+      widget: widgets.select(),
+      choices: orderStatus,
+    }),
+    remarks: fields.string({
+      required: false,
+      errorAfterField: true,
+    }),
+  });
+};
+
 module.exports = {
   createProductForm,
   createRegistrationForm,
   createLoginForm,
   createSearchForm,
+  createSearchOrderForm,
+  createUpdateOrderForm,
   bootstrapField,
 };
