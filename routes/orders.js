@@ -48,12 +48,11 @@ router.get("/", async function (req, res) {
 router.get("/:order_id/update", async function (req, res) {
   const order = await OrderDataLayer.getOrderById(req.params.order_id);
   const remarks = order.get("remarks");
-  console.log(order.toJSON());
+  // console.log(order.toJSON());
   const orderStatuses = await OrderDataLayer.getAllOrderStatuses();
 
   const orderForm = createUpdateOrderForm({
     orderStatuses,
-    remarks,
   });
 
   orderForm.fields.order_status_id.value = order.get("order_status_id");
@@ -75,7 +74,8 @@ router.post("/:order_id/update", async (req, res) => {
 
   orderForm.handle(req, {
     success: async (form) => {
-      updateOrderData = { ...form.data };
+      delivery_date = new Date();
+      updateOrderData = { ...form.data, delivery_date };
       order.set(updateOrderData);
       order.save();
       req.flash("success_messages", "Order successfully updated");

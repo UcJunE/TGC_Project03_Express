@@ -12,7 +12,7 @@
           {{/each}}
           <h4>{{this.jewelry.color.name}}</h4>
           <h5>Quantity : {{this.quantity}}</h5>
-          <h4>Price : ${{this.jewelry.cost}}</h4>
+          <h4>Price : ${{divide this.jewelry.cost 100}}</h4>
           <img src={{this.jewelry.jewelry_thumbnail_url}} alt="" />
         </li>
             <form method="POST" action="/cart/{{this.jewelry.id}}/quantity/update">
