@@ -7,8 +7,9 @@ const { query } = require("express");
 const async = require("hbs/lib/async");
 
 router.get("/", async (req, res) => {
-  res.send(await productDataLayer.getAllProducts());
-  // ^ fetch all the products from main table
+  let result = await productDataLayer.getAllProducts()
+  res.json(result);
+  // ^ fetch all the products from main table6+
 });
 
 // for query
@@ -65,7 +66,7 @@ router.get("/search", async (req, res) => {
   });
 
   let products = productsData.toJSON();
-  res.send(products);
+  res.json(products);
 });
 
 //for update and delete via id
@@ -74,7 +75,7 @@ router.get("/:product_id", async (req, res) => {
     const product = await productDataLayer.getProductById(
       req.params.product_id
     );
-    res.send(product);
+    res.json(product);
   } catch (error) {
     res.send(error);
   }

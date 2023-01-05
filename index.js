@@ -95,6 +95,10 @@ const cloudinaryRoutes = require("./routes/cloudinary");
 const shoppingCartRoutes = require("./routes/shoppingCart");
 
 const ordersRoutes = require("./routes/orders");
+const {
+  checkIfAuthenticated,
+  checkIfAuthenticatedJWT,
+} = require("./middlewares");
 
 const api = {
   products: require("./routes/api/products"),
@@ -102,21 +106,33 @@ const api = {
   checkout: require("./routes/api/checkout"),
   account: require("./routes/api/account"),
   stripe: require("./routes/api/stripe"),
+  order: require("./routes/api/orders"),
 };
 
 async function main() {
   app.use("/", accountRoutes);
-  app.use("/products", productsRoutes);
+  app.use("/products", checkIfAuthenticated, productsRoutes);
   app.use("/cloudinary", cloudinaryRoutes);
   app.use("/cart", shoppingCartRoutes);
-  app.use("/order", ordersRoutes);
+  app.use("/order", checkIfAuthenticated, ordersRoutes);
 
   //api routes
   app.use("/api/products", express.json(), api.products);
-  app.use("/api/shoppingcart", express.json(), api.shoppingCart);
-  app.use("/api/checkout", express.json(), api.checkout);
+  app.use(
+    "/api/shoppingcart",
+    express.json(),
+    checkIfAuthenticatedJWT,
+    api.shoppingCart
+  );
+  app.use(
+    "/api/checkout",
+    express.json(),
+    checkIfAuthenticatedJWT,
+    api.checkout
+  );
   app.use("/api/account", express.json(), api.account);
   app.use("/api/stripe", api.stripe);
+  app.use("/api/order", express.json(), checkIfAuthenticatedJWT, api.order);
 }
 
 main();

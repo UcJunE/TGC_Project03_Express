@@ -8,7 +8,7 @@ const CartServices = require("../../services/cart_services");
 const Stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 router.get("/", async (req, res) => {
-  const cart = new CartServices(req.session.user.id);
+  const cart = new CartServices(req.user.id);
 
   let items = await cart.getCartItem();
   // console.log(items.toJSON());
