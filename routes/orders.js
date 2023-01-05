@@ -46,20 +46,48 @@ router.get("/", async function (req, res) {
 });
 
 router.get("/:order_id/update", async function (req, res) {
-  // const order = await OrderDataLayer.getOrderById(req.params.order_id);
-  // console.log("Hello?");
-  // console.log(order);
-  // const orderStatuses = await OrderDataLayer.getAllOrderStatuses();
+  const order = await OrderDataLayer.getOrderById(req.params.order_id);
+  const remarks = order.get("remarks");
+  console.log(order.toJSON());
+  const orderStatuses = await OrderDataLayer.getAllOrderStatuses();
 
-  // const orderForm = createUpdateOrderForm({
-  //   orderStatuses,
-  // });
+  const orderForm = createUpdateOrderForm({
+    orderStatuses,
+    remarks,
+  });
 
-  // orderForm.fields.order_status_id.value = order.get("order_status_id");
-  // res.render("orders/update", {
-  //   form: orderForm.toHTML(bootstrapField),
-  // });
-  ("Hello?")
+  orderForm.fields.order_status_id.value = order.get("order_status_id");
+  res.render("orders/update", {
+    form: orderForm.toHTML(bootstrapField),
+  });
+});
+
+//update order
+router.post("/:order_id/update", async (req, res) => {
+  const order = await OrderDataLayer.getOrderById(req.params.order_id);
+  const remarks = order.get("remarks");
+  const orderStatuses = await OrderDataLayer.getAllOrderStatuses();
+
+  const orderForm = createUpdateOrderForm({
+    orderStatuses,
+    remarks,
+  });
+
+  orderForm.handle(req, {
+    success: async (form) => {
+      updateOrderData = { ...form.data };
+      order.set(updateOrderData);
+      order.save();
+      req.flash("success_messages", "Order successfully updated");
+      res.redirect("/order");
+    },
+    error: async (form) => {
+      res.render("orders/order", {
+        order: order.toJSON(),
+        form: form.toHTML(bootstrapField),
+      });
+    },
+  });
 });
 
 module.exports = router;

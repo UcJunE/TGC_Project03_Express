@@ -9,7 +9,7 @@
             {{{form}}}
             <input type="submit" class="btn btn-sm btn-primary mt-2" />
 
-            <a href="/orders" class="btn btn-sm btn-danger mt-2">Clear Search</a>
+            <a href="/order" class="btn btn-sm btn-danger mt-2">Clear Search</a>
           </form>
         </div>
 
@@ -27,6 +27,7 @@
                 <th>Shipping Option</th>
                 <th>Order Date</th>
                 <th>Delivery Date</th>
+                <th>Remarks</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -60,7 +61,14 @@
                       N/A
                     {{/if}}
                   </td>
-                  <td>{{this.orderStatus}}</td>
+                  <td>
+                    {{#if this.remarks}}
+                      {{this.remarks}}
+                    {{else}}
+                      N/A
+                    {{/if}}
+                  </td>
+                  <td>{{this.orderStatus.order_status}}</td>
                   <td>
                     <a
                       href="/order/{{this.id}}/update"

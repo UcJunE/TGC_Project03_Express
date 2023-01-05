@@ -7,8 +7,8 @@
       {{#each shoppingCart}}
         <li class="list-group-item my-3">
           <h4>{{this.jewelry.name}}</h4>
-          {{#each this.materials}}
-            <h5>Materials: {{this.material_type}} </h5>
+          {{#each this.jewelry.materials}}         
+            <h5>Materials: {{material_type}} </h5>           
           {{/each}}
           <h4>{{this.jewelry.color.name}}</h4>
           <h5>Quantity : {{this.quantity}}</h5>

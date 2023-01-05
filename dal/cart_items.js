@@ -8,7 +8,7 @@ const getCartItem = async (userId) => {
     .orderBy("id")
     .fetch({
       require: false,
-      withRelated: ["user", "jewelry", "jewelry.color", "materials"],
+      withRelated: ["user", "jewelry", "jewelry.color", "jewelry.materials"],
     });
     
 };

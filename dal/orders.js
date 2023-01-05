@@ -114,6 +114,15 @@ const getOrderById = async function (orderId) {
   return order;
 };
 
+const updateOrder = async function (orderId, orderData) {
+  const order = await getOrderById(orderId);
+  const { order_status_id } = orderData;
+
+  order.set("order_status_id", order_status_id);
+  await order.save();
+  return true;
+};
+
 module.exports = {
   getAllOrders,
   addOrder,
@@ -123,5 +132,6 @@ module.exports = {
   getAllOrdersByUserId,
   getAllOrderStatuses,
   getOrderById,
+  updateOrder,
   filterOrdersBySearchFields,
 };
