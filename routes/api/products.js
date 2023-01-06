@@ -72,28 +72,16 @@ router.get("/", async (req, res) => {
 //for query for api
 router.get("/search_options", async (req, res) => {
   const colors = await productDataLayer.getAllColors();
-  colors.unshift([0, "------"]);
+  colors.unshift([0, "Select Colour"]);
 
   const materials = await productDataLayer.getAllMaterials();
   materials.unshift([0, "------"]);
 
-  const productDesigns = {};
-  const filteredProducts = [];
-  let allProducts = await Jewelry.fetchAll().map((product) => {
-    if (!productDesigns[product.get("design")]) {
-      productDesigns[product.get("design")] = true;
-      filteredProducts.push([product.get("design"), product.get("design")]);
-    }
-  });
-
-  const designs = filteredProducts;
-  designs.unshift([0, "------"]);
-
   const options = {
     colors,
     materials,
-    designs,
   };
+  console.log(options);
   res.json(options);
 });
 
