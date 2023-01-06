@@ -23,8 +23,26 @@ const getProductById = async (productId) => {
     id: parseInt(productId),
   }).fetch({
     require: true,
-    withRelated: ["color","materials"],
+    withRelated: ["color", "materials"],
   });
+};
+
+const getAllProducts = async () => {
+  return await Jewelry.fetchAll({
+    withRelated: ["color", "materials"],
+  });
+};
+
+const updateProduct = async (productId, formData) => {
+  const product = await getProductById(productId);
+
+  if (!product) {
+    return;
+  } else {
+    product.set(formData);
+    await product.save();
+    return true;
+  }
 };
 
 module.exports = {
@@ -32,4 +50,6 @@ module.exports = {
   getAllColors,
   getAllMaterials,
   getProductById,
+  getAllProducts,
+  updateProduct,
 };

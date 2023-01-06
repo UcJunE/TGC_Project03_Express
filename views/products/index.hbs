@@ -30,11 +30,7 @@
                 {{this.name}}
               </td>
               <td>
-                <img
-                  src="{{this.jewelry_img_url}}"
-                  alt=""
-                  style="width: 130px;"
-                />
+                <img src="{{this.jewelry_thumbnail_url}}" alt="item-img" />
               </td>
               <td>{{this.color.name}}</td>
               <td>
@@ -48,13 +44,18 @@
                 {{/each}}
               </td>
 
-              <td>${{this.cost}}</td>
+              <td>${{divide this.cost 100}}</td>
               <td>{{this.weight}}</td>
               <td>{{this.width}} mm(width)x{{this.height}}mm (height)</td>
               <td>{{this.design}}</td>
-              <td>{{this.created_date}}</td>
+              <td>{{moment this.created_date format="dddd, DD MMMM YYYY"}}</td>
               <td>Left: {{this.stock}} <br /> Sold:{{this.sold}}</td>
               <td>
+                <a
+                  href="/cart/{{this.id}}/add"
+                  class="btn btn-success btn-sm"
+                >Add to cart</a>
+
                 <a
                   href="/products/{{this.id}}/update"
                   class="btn btn-primary btn-sm mt-2"

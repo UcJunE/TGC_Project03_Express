@@ -1,10 +1,14 @@
 const express = require("express");
 const hbs = require("hbs");
 const wax = require("wax-on");
+const helpers = require("handlebars-helpers")({
+  handlebars: hbs.handlebars,
+});
 const session = require("express-session");
 const flash = require("connect-flash");
 const FileStore = require("session-file-store")(session);
 const csrf = require("csurf");
+const cors = require("cors");
 require("dotenv").config();
 
 let app = express();
@@ -25,9 +29,23 @@ app.use(
     extended: false,
   })
 );
+//cross origin resource sharing
+app.use(cors());
 
 // enable CSRF
-app.use(csrf());
+const csurfInstance = csrf();
+app.use(function (req, res, next) {
+  console.log("checking for csrf exclusion");
+  // exclude whatever url we want from CSRF protection
+  if (
+    // req.url === "/checkout/process_payment" ||
+    req.url.slice(0, 5) == "/api/"
+  ) {
+    console.log("checking route");
+    return next();
+  }
+  csurfInstance(req, res, next);
+});
 
 // Share CSRF with hbs files
 app.use(function (req, res, next) {
@@ -74,11 +92,47 @@ app.use((req, res, next) => {
 const accountRoutes = require("./routes/account");
 const productsRoutes = require("./routes/products");
 const cloudinaryRoutes = require("./routes/cloudinary");
+const shoppingCartRoutes = require("./routes/shoppingCart");
+
+const ordersRoutes = require("./routes/orders");
+const {
+  checkIfAuthenticated,
+  checkIfAuthenticatedJWT,
+} = require("./middlewares");
+
+const api = {
+  products: require("./routes/api/products"),
+  shoppingCart: require("./routes/api/shoppingCart"),
+  checkout: require("./routes/api/checkout"),
+  account: require("./routes/api/account"),
+  stripe: require("./routes/api/stripe"),
+  order: require("./routes/api/orders"),
+};
 
 async function main() {
   app.use("/", accountRoutes);
-  app.use("/products", productsRoutes);
+  app.use("/products", checkIfAuthenticated, productsRoutes);
   app.use("/cloudinary", cloudinaryRoutes);
+  app.use("/cart", shoppingCartRoutes);
+  app.use("/order", checkIfAuthenticated, ordersRoutes);
+
+  //api routes
+  app.use("/api/products", express.json(), api.products);
+  app.use(
+    "/api/shoppingcart",
+    express.json(),
+    checkIfAuthenticatedJWT,
+    api.shoppingCart
+  );
+  app.use(
+    "/api/checkout",
+    express.json(),
+    checkIfAuthenticatedJWT,
+    api.checkout
+  );
+  app.use("/api/account", express.json(), api.account);
+  app.use("/api/stripe", api.stripe);
+  app.use("/api/order", express.json(), checkIfAuthenticatedJWT, api.order);
 }
 
 main();
