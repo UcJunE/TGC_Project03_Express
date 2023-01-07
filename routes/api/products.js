@@ -13,69 +13,66 @@ router.get("/", async (req, res) => {
 });
 
 // for query
-// router.get("/search", async (req, res) => {
-//   const query = Jewelry.collection();
-//   //   console.log(query);
+router.get("/search", async (req, res) => {
+  const q = Jewelry.collection();
+  //   console.log(query);
+  let doSearch = false;
 
-//   const allMaterials = await productDataLayer.getAllMaterials();
+  for (let [eachKey, eachValue] of Object.entries(req.query)) {
+    // console.log("entered for loop")
+    console.log(`${eachKey}: ${eachValue}`);
 
-//   //   console.log(allMaterials);
-//   //   allMaterials.unshift([0, "----"]);
+    if (eachValue.length > 0) {
+      doSearch = true;
+    }
+  }
 
-//   let colors = await productDataLayer.getAllColors();
-//   //   console.log(colors);
+  if (doSearch) {
+    if (req.query.name) {
+      q.where("name", "like", "%" + req.query.name + "%");
+    }
+    if (req.query.id && req.query.id != "0") {
+      q.where("jewelries.id", "=", form.data.id);
+    }
+    if (req.query.color_id && req.query.color_id !== "0") {
+      q.where("color_id", "=", req.query.color_id);
+    }
+    if (req.query.materials && req.query.materials !== "0") {
+      q.query("join", "jewelries_materials", "jewelries.id", "jewel_id").where(
+        "material_id",
+        "in",
+        req.query.materials.split(",")
+      );
+    }
 
-//   //   colors.unshift([0, "All Colors"]);
-//   const productDesigns = {};
-//   const filteredProducts = [];
-//   let allProducts = await Jewelry.fetchAll().map((product) => {
-//     if (!productDesigns[product.get("design")]) {
-//       productDesigns[product.get("design")] = true;
-//       filteredProducts.push([product.get("design"), product.get("design")]);
-//     }
-//   });
-//   //   filteredProducts.unshift([0, "----"]);
-//   if (req.query.name) {
-//     q.where("name", "like", "%" + req.query.name + "%");
-//   }
-//   if (req.query.id && req.query.id != "0") {
-//     q.where("jewelries.id", "=", form.data.id);
-//   }
-//   if (req.query.color_id && req.query.color_id !== "0") {
-//     q.where("color_id", "=", req.query.color_id);
-//   }
-//   if (req.query.materials && req.query.materials !== "0") {
-//     q.query("join", "jewelries_materials", "jewelries.id", "jewel_id").where(
-//       "material_id",
-//       "in",
-//       req.query.materials.split(",")
-//     );
-//   }
-//   if (req.query.design) {
-//     q.where("design", "=", req.query.design);
-//   }
-//   if (req.query.min_cost) {
-//     q.where("cost", ">=", req.query.min_cost);
-//   }
-//   if (req.query.max_cost) {
-//     q.where("cost", "<=", req.query.max_cost);
-//   }
+    if (req.query.min_cost) {
+      q.where("cost", ">=", req.query.min_cost);
+    }
+    if (req.query.max_cost) {
+      q.where("cost", "<=", req.query.max_cost);
+    }
+    let productsData = await query.fetch({
+      withRelated: ["color", "materials"],
+    });
 
-//   let productsData = await query.fetch({
-//     withRelated: ["color", "materials"],
-//   });
+    let products = productsData.toJSON();
+    res.json(products);
+  } else {
+    let allProducts = await productDataLayer.getAllProducts();
+    res.status(200);
+    res.json({
+      Message: allProducts,
+    });
+  }
+});
 
-//   let products = productsData.toJSON();
-//   res.json(products);
-// });
-
-//for query for api
+//for selections dropdown on fe
 router.get("/search_options", async (req, res) => {
   const colors = await productDataLayer.getAllColors();
   colors.unshift([0, "Select Colour"]);
 
   const materials = await productDataLayer.getAllMaterials();
-  materials.unshift([0, "------"]);
+  materials.unshift([0, "Select Material"]);
 
   const options = {
     colors,
