@@ -29,7 +29,11 @@ router.get("/search", async (req, res) => {
 
   if (doSearch) {
     if (req.query.name) {
-      q.where("name", "like", "%" + req.query.name + "%");
+      if (process.env.DB_DRIVER == "mysql") {
+        q.where("name", "like", "%" + req.query.name + "%");
+      } else {
+        q.where("name", "ilike", "%" + req.query.name + "%");
+      }
     }
     if (req.query.id && req.query.id != "0") {
       q.where("jewelries.id", "=", form.data.id);
