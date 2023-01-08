@@ -11,47 +11,54 @@
     />
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Landing page /should be the login page</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarText"
-        aria-controls="navbarText"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/products">Home
-              </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/cart">Carts</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/order">Order</a>
-          </li>
-
-        </ul>
-        <div class="mx-2">
-          {{#if user}}
-            Hi,
-            {{user.username}}
-
-            <a href="/logout" class="ml-3 btn btn-primary btn-sm">Logout</a>
-
-          {{else}}
-            Hi, stranger
-            <a href="/login" class="ml-3 btn btn-primary btn-sm">Login</a>
-          {{/if}}
+    {{! try nav }}
+    <nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Jewelry</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarToggler"
+          aria-controls="navbarToggler"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggler">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/products"
+              >Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/order">Order</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">Profile</a>
+            </li>
+          </ul>
+          <div class="d-flex me-2">
+            {{#if user}}
+              Hi,
+              {{user.username}}
+              <a href="/logout" class="mx-3 btn btn-primary btn-sm">Logout</a>
+            {{else}}
+              Hi, stranger
+              <a href="/login" class="mx-3 btn btn-primary btn-sm">Login</a>
+            {{/if}}
+          </div>
         </div>
       </div>
     </nav>
+
     <div class="container">
       {{#if success_messages}}
         {{#each success_messages}}

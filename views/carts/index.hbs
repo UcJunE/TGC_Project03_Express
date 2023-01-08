@@ -1,35 +1,35 @@
 {{#extends "base"}}
 
   {{#block "content"}}
-    <h1>My shopping cart</h1>
+  <div class="card  mt-4" style="width: 18rem;">
+ <div class="card-header">
+  <h2>Shopping Cart</h2>
+  </div>
 
-    <ul class="list-group">
+    <ul class="list-group list-group-flush">
       {{#each shoppingCart}}
-        <li class="list-group-item my-3">
-          <h4>{{this.jewelry.name}}</h4>
+          <li class="list-group-item">{{this.jewelry.name}}</li>
           {{#each this.jewelry.materials}}         
-            <h5>Materials: {{material_type}} </h5>           
+            <li class="list-group-item">Materials: {{material_type}} </li>           
           {{/each}}
-          <h4>{{this.jewelry.color.name}}</h4>
-          <h5>Quantity : {{this.quantity}}</h5>
-          <h4>Price : ${{divide this.jewelry.cost 100}}</h4>
-          <img src={{this.jewelry.jewelry_thumbnail_url}} alt="" />
-        </li>
+          <li class="list-group-item">{{this.jewelry.color.name}}</li>
+          <li class="list-group-item">Quantity : {{this.quantity}}</li>
+          <li class="list-group-item">Price : ${{divide this.jewelry.cost 100}}</li>
+          
+          <img src={{this.jewelry.jewelry_img_url}} alt="product-img" />
+        
             <form method="POST" action="/cart/{{this.jewelry.id}}/quantity/update">
                 <input type="hidden" value="{{../csrfToken}}" name="_csrf"/> 
-                <h5>
-                    Quantity: <input type="text" name="newQuantity" value="{{this.quantity}}" style="width:30px" /> 
-                    <input type="submit" value="Update Quantity" class="btn btn-success btn-sm mx-2" />
-                </h5>
+                <li class="list-group-item">
+                    Quantity: <input type="text" name="newQuantity" value="{{this.quantity}}" style="width:30px" />                    
+                </li>
+                <li class="list-group-item">
+                <input type="submit" value="Update Quantity" class="btn btn-success btn-sm mx-2" />
+                <a href="/cart/{{this.jewelry.id}}/remove"class="btn btn-danger">Remove</a>
+                </li>
             </form>
-        <div>
-          <a
-            href="/cart/{{this.jewelry.id}}/remove"
-            class="btn btn-danger"
-          >Remove</a>
-        </div>
-      {{/each}}
+{{/each}}
     </ul>
-
+</div>
   {{/block}}
 {{/extends}}

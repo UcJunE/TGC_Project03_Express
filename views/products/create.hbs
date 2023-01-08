@@ -5,11 +5,13 @@
     <form method="POST">
       <input type="hidden" name="_csrf" value="{{csrfToken}}" />
       {{{form}}}
-      <div>
+      <div class="d-flex gap-2">
         <a href="#" class="btn btn-primary mt-3" id="upload_widget">Upload</a>
         <img src="" style="display:none" id="uploaded_image" />
+        <input type="submit" value="Add Product" class="btn btn-primary mt-3" />
+        <a href="/products" class="btn btn-secondary mt-3">Back</a>
       </div>
-      <input type="submit" value="Add Product" class="btn btn-primary mt-3" />
+      
     </form>
   {{/block}}
 

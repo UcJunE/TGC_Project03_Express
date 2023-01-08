@@ -45,7 +45,7 @@
               </td>
 
               <td>${{divide this.cost 100}}</td>
-              <td>{{this.weight}}</td>
+              <td>{{this.weight}} g</td>
               <td>{{this.width}} mm(width)x{{this.height}}mm (height)</td>
               <td>{{this.design}}</td>
               <td>{{moment this.created_date format="dddd, DD MMMM YYYY"}}</td>
@@ -55,7 +55,7 @@
                   href="/cart/{{this.id}}/add"
                   class="btn btn-success btn-sm"
                 >Add to cart</a>
-
+                
                 <a
                   href="/products/{{this.id}}/update"
                   class="btn btn-primary btn-sm mt-2"
@@ -64,6 +64,7 @@
                   href="/products/{{this.id}}/delete"
                   class="btn btn-danger btn-sm mt-2"
                 >Delete</a>
+
               </td>
             </tr>
           {{/each}}

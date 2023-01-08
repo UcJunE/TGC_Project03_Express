@@ -1,13 +1,33 @@
 {{#extends "base"}}
 
   {{#block "content"}}
-    <h1>User Profile</h1>
-    <ul>
-      <li>Username: {{user.username}}</li>
-      <li>Email:{{user.email}}</li>
-      <li>Name: {{user.name}}</li>
-      <li>Role: {{user.role}}</li>
-    </ul>
+
+    <div class="container mt-5">
+      <div class="card" style="width: 18rem ;">
+        <img
+          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+          class="card-img-top"
+          alt="..."
+        />
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+              </tr>
+              <tr>
+                <td>{{user.name}}</td>
+                <td>{{user.role}}</td>
+              </tr>
+
+            </thead>
+
+          </table>
+          <a href="products/create" class="btn btn-primary">Create Products</a>
+        </div>
+      </div>
+    </div>
 
   {{/block}}
 
