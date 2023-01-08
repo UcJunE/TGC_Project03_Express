@@ -49,13 +49,13 @@ router.get("/search", async (req, res) => {
       );
     }
 
-    if (req.query.min_cost) {
-      q.where("cost", ">=", req.query.min_cost);
+    if (parseInt(req.query.min_cost) * 100) {
+      q.where("cost", ">=", parseInt(req.query.min_cost)*100);
     }
-    if (req.query.max_cost) {
-      q.where("cost", "<=", req.query.max_cost);
+    if (parseInt(req.query.max_cost) * 1000) {
+      q.where("cost", "<=", parseInt(req.query.max_cost)*100);
     }
-    let productsData = await query.fetch({
+    let productsData = await q.fetch({
       withRelated: ["color", "materials"],
     });
 
@@ -82,7 +82,7 @@ router.get("/search_options", async (req, res) => {
     colors,
     materials,
   };
-  console.log(options);
+  // console.log(options);
   res.json(options);
 });
 
