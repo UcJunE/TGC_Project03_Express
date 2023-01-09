@@ -28,6 +28,8 @@ const generateAccessToken = function (
 };
 
 router.post("/register", async (req, res) => {
+
+  console.log("register route called")
   //check for customer in the db
 
   let error = {};
@@ -35,7 +37,9 @@ router.post("/register", async (req, res) => {
   const username = req.body.username;
   if (username.length == 0 || username.lenght > 100) {
     error.username = "Please choose a username less than 100 characters";
-  }
+  } 
+  
+ 
 
   const name = req.body.name;
   if ((name.lenght = 0 || name.lenght > 100)) {
@@ -57,6 +61,16 @@ router.post("/register", async (req, res) => {
     error.contact_number = "Contact number must no more than 20 characters";
   }
 
+  // If there is any error in user data, return error response
+  if (Object.keys(error).length > 0) {
+    console.log("should not be here")
+    res.status(400);
+    res.json({
+      error: error,
+    });
+    return;
+  }
+
   const userData = {
     username: username,
     name: name,
@@ -66,21 +80,25 @@ router.post("/register", async (req, res) => {
     created_date: new Date(),
   };
 
-  res.json(userData);
+
 
   try {
-    const checkUserNameExist = dataLayer.checkUsernameTaken(username);
     if (checkUserNameExist) {
+      const checkUserNameExist = await dataLayer.checkUsernameTaken(username);
+      res.status(400);
       res.json({
-        checkUserNameExist: "User already exist",
+        error: "User already exist",
       });
-      return;
+    } else {
+      console.log("User created")
+      await dataLayer.addNewUser(userData, 1);
+      res.status(200);
+      res.json({
+        success: "User successfully registered",
+      });
     }
 
-    await dataLayer.addNewUser(userData, 1);
-    res.json({
-      success: "User successfully registered",
-    });
+    
   } catch (e) {
     res.json({
       error: "Internal server error , Please contact adminstrator",
@@ -89,10 +107,12 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  console.log("login route called")
   const userData = {
     username: req.body.username,
     password: getHashedPassword(req.body.password),
   };
+  // console.log(userData);
   // console.log("this is userdata" ,userData)
   const user = await dataLayer.getUserByUserDetail(userData);
 
@@ -100,7 +120,8 @@ router.post("/login", async (req, res) => {
   // to check user exist or not and  user is a customer
   if (!user || user.get("role_id") != 1) {
     res.json({
-      error: "Invalid Username / password",
+      error: "Invalid Username / Password",
+      status: "fail",
     });
     return;
   }
@@ -123,6 +144,7 @@ router.post("/login", async (req, res) => {
   );
   res.status(200);
   res.json({
+    status: "success",
     accessToken: accessToken,
     refreshToken: refreshToken,
   });
