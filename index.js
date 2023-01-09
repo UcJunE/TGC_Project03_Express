@@ -115,6 +115,7 @@ async function main() {
   app.use("/cloudinary", cloudinaryRoutes);
   app.use("/cart", shoppingCartRoutes);
   app.use("/order", checkIfAuthenticated, ordersRoutes);
+  
 
   //api routes
   app.use("/api/products", express.json(), api.products);

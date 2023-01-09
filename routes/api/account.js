@@ -28,8 +28,7 @@ const generateAccessToken = function (
 };
 
 router.post("/register", async (req, res) => {
-
-  console.log("register route called")
+  console.log("register route called");
   //check for customer in the db
 
   let error = {};
@@ -37,9 +36,7 @@ router.post("/register", async (req, res) => {
   const username = req.body.username;
   if (username.length == 0 || username.lenght > 100) {
     error.username = "Please choose a username less than 100 characters";
-  } 
-  
- 
+  }
 
   const name = req.body.name;
   if ((name.lenght = 0 || name.lenght > 100)) {
@@ -63,7 +60,7 @@ router.post("/register", async (req, res) => {
 
   // If there is any error in user data, return error response
   if (Object.keys(error).length > 0) {
-    console.log("should not be here")
+    console.log("should not be here");
     res.status(400);
     res.json({
       error: error,
@@ -80,8 +77,6 @@ router.post("/register", async (req, res) => {
     created_date: new Date(),
   };
 
-
-
   try {
     if (checkUserNameExist) {
       const checkUserNameExist = await dataLayer.checkUsernameTaken(username);
@@ -90,15 +85,13 @@ router.post("/register", async (req, res) => {
         error: "User already exist",
       });
     } else {
-      console.log("User created")
+      console.log("User created");
       await dataLayer.addNewUser(userData, 1);
       res.status(200);
       res.json({
         success: "User successfully registered",
       });
     }
-
-    
   } catch (e) {
     res.json({
       error: "Internal server error , Please contact adminstrator",
@@ -107,7 +100,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  console.log("login route called")
+  console.log("login route called");
   const userData = {
     username: req.body.username,
     password: getHashedPassword(req.body.password),
@@ -204,23 +197,21 @@ router.post("/refresh", checkIfAuthenticatedJWT, async function (req, res) {
 
 router.post("/logout", async function (req, res) {
   const refreshToken = req.body.refreshToken;
-
+  // console.log("backend lougout");
   if (refreshToken) {
     //add refresh token to black list
+    // console.log("the refreshtoken from be", refreshToken);
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       async function (err, tokenData) {
         if (!err) {
           //check if token is already blacklist
-          const blacklistedToken = await blacklistedToken
-            .where({
-              blacklisted_token: refreshToken,
-            })
-            .fetch({
-              require: false,
-            });
-
+          const blacklistedToken = await BlacklistedToken.where({
+            token: refreshToken,
+          }).fetch({
+            require: false,
+          });
           //if the blaclisted token is not null, means it exists
           if (blacklistedToken) {
             res.status(400);
@@ -231,7 +222,7 @@ router.post("/logout", async function (req, res) {
           }
           // add to blacklist
           const token = new BlacklistedToken();
-          token.set("blacklisted_token", refreshToken);
+          token.set("token", refreshToken);
           token.get("created_date", new Date());
           await token.save();
           res.json({

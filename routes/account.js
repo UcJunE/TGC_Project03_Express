@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
   res.render("accounts/home");
 });
 
-router.get("/register", checkIfAuthenticated, (req, res) => {
+router.get("/register", (req, res) => {
   const registerForm = createRegistrationForm();
 
   res.render("accounts/register", {
