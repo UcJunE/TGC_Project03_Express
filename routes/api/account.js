@@ -146,7 +146,7 @@ router.post("/login", async (req, res) => {
 router.post("/refresh", checkIfAuthenticatedJWT, async function (req, res) {
   // Get the refreshToken from req.body (need not be in authorisation header for refresh tokens)
   const refreshToken = req.body.refreshToken;
-
+  console.log("bE refreshCheck ,this is the refreshToken", refreshToken);
   if (refreshToken) {
     //check if refresh token alr blacklisted
     const blacklisted_token = await BlacklistedToken.where({
@@ -154,6 +154,8 @@ router.post("/refresh", checkIfAuthenticatedJWT, async function (req, res) {
     }).fetch({
       require: false,
     });
+
+    // console.log("check blacklistoken from my blacklist token table and >>>", blacklisted_token);
     //if blacklisted token is not null . that's mean it is exist
     if (blacklisted_token) {
       res.status(400);
@@ -162,10 +164,11 @@ router.post("/refresh", checkIfAuthenticatedJWT, async function (req, res) {
       });
       return;
     }
+
     //verify refresh token
     jwt.verify(
       refreshToken,
-      process.env.TOKEN_SECRET,
+      process.env.REFRESH_TOKEN_SECRET,
       function (err, tokenData) {
         // if no error means its verified
         if (!err) {
