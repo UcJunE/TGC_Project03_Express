@@ -32,6 +32,7 @@ class CartServices {
   }
 
   async updateCartItemQuantity(productId, quantity) {
+    console.log("doest this update fucntion run ?")
     return await cartDataLayer.updateCartItem(
       this.user_id,
       productId,

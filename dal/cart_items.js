@@ -45,6 +45,8 @@ async function deleteCartItem(userId, productId) {
 }
 
 async function updateCartItem(userId, productId, newQuantity) {
+  console.log("last route does it update",userId ,productId ,newQuantity)
+  
   let cartItem = await getCartItemByUserAndProduct(userId, productId);
   if (cartItem) {
     cartItem.set("quantity", newQuantity);

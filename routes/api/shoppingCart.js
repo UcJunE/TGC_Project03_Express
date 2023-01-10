@@ -6,7 +6,7 @@ const CartServices = require("../../services/cart_services");
 router.get("/", async (req, res) => {
   let cart = new CartServices(req.user.id);
   shoppingCart = (await cart.getCartItem()).toJSON();
-  console.log(shoppingCart);
+  // console.log(shoppingCart);
   res.json(shoppingCart);
 });
 
@@ -40,6 +40,8 @@ router.get("/:product_id/remove", async (req, res) => {
 
 // need to ask for this
 router.post("/:product_id/quantity/update", async (req, res) => {
+  console.log("be post route handler for update")
+  
   try {
     let cart = new CartServices(req.user.id);
     await cart.updateCartItemQuantity(

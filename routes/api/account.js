@@ -60,7 +60,7 @@ router.post("/register", async (req, res) => {
 
   // If there is any error in user data, return error response
   if (Object.keys(error).length > 0) {
-    console.log("should not be here");
+    console.log("api register route");
     res.status(400);
     res.json({
       error: error,
