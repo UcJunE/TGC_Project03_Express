@@ -6,7 +6,6 @@ router.get("/", async function (req, res) {
   const userId = req.user.id;
   try {
     const orders = await dataLayer.getAllOrdersByUserId(userId);
-    res.send(orders);
     res.json(orders);
   } catch (error) {
     console.log(error);

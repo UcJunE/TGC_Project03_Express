@@ -146,7 +146,7 @@ router.post("/login", async (req, res) => {
 router.post("/refresh", checkIfAuthenticatedJWT, async function (req, res) {
   // Get the refreshToken from req.body (need not be in authorisation header for refresh tokens)
   const refreshToken = req.body.refreshToken;
-  console.log("bE refreshCheck ,this is the refreshToken", refreshToken);
+  // console.log("bE refreshCheck ,this is the refreshToken", refreshToken);
   if (refreshToken) {
     //check if refresh token alr blacklisted
     const blacklisted_token = await BlacklistedToken.where({

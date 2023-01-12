@@ -10,6 +10,7 @@ router.post(
   "/process_payment",
   express.raw({ type: "application/json" }),
   async function (req, res) {
+    console.log("stripe page BE");
     let payload = req.body; // Payment information is inside req.body
     let endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
     let sigHeader = req.headers["stripe-signature"]; // When stripe sends the information, there will be a signature and the key will be 'stripe-signature'
@@ -82,7 +83,7 @@ router.post(
         const order = await orderDataLayer.addOrder(orderData);
         const orderId = order.get("id");
 
-        console.log("this is metaData", metadata);
+        // console.log("this is metaData", metadata);
         // // Create order items using order ID
         for (let lineItem of metadata) {
           const productId = lineItem.product_id;
