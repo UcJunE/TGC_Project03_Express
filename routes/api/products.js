@@ -88,6 +88,7 @@ router.get("/search_options", async (req, res) => {
 
 //for update and delete via id
 router.get("/:product_id", async (req, res) => {
+  console.log("BE pass thru")
   try {
     const product = await productDataLayer.getProductById(
       req.params.product_id

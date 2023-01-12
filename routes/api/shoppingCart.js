@@ -10,10 +10,11 @@ router.get("/", async (req, res) => {
   res.json(shoppingCart);
 });
 
-router.get("/:product_id/add", async (req, res) => {
+router.post("/:product_id/add", async (req, res) => {
+  console.log("add cart BE route handler")
   try {
     let cart = new CartServices(req.user.id);
-    await cart.addToCart(req.params.product_id, 1);
+    await cart.addToCart(req.params.product_id, req.body.quantity);
     res.json({
       success: "Item is added",
     });
@@ -24,7 +25,8 @@ router.get("/:product_id/add", async (req, res) => {
   }
 });
 
-router.get("/:product_id/remove", async (req, res) => {
+router.delete("/:product_id/remove", async (req, res) => {
+  console.log("did it reach here?");
   try {
     let cart = new CartServices(req.user.id);
     await cart.removeCartItem(req.params.product_id);
@@ -38,10 +40,9 @@ router.get("/:product_id/remove", async (req, res) => {
   }
 });
 
-// need to ask for this
-router.post("/:product_id/quantity/update", async (req, res) => {
-  console.log("be post route handler for update")
-  
+router.put("/:product_id/update", async (req, res) => {
+  console.log("be post route handler for update");
+
   try {
     let cart = new CartServices(req.user.id);
     await cart.updateCartItemQuantity(
