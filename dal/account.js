@@ -5,9 +5,9 @@ const addNewUser = async function (userInfo, roleId = 1) {
   userInfo.role_id = roleId;
 
   const user = new User(userInfo);
-
+  console.log("add new user function and userinfto" )
   await user.save();
-
+  console.log("after the save")
   return user;
 };
 
