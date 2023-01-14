@@ -34,12 +34,12 @@ router.post("/register", async (req, res) => {
   let error = {};
 
   const username = req.body.username;
-  if (username.length == 0 || username.lenght > 100) {
+  if (username.length == 0 || username.length > 100) {
     error.username = "Please choose a username less than 100 characters";
   }
 
   const name = req.body.name;
-  if ((name.lenght = 0 || name.lenght > 100)) {
+  if ((name.length = 0 || name.length > 100)) {
     error.name = "Name must not longer than 100 characters";
   }
 
@@ -67,7 +67,7 @@ router.post("/register", async (req, res) => {
     });
     return;
   }
-
+ 
   const userData = {
     username: username,
     name: name,
