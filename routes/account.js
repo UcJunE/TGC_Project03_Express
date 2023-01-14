@@ -48,6 +48,7 @@ router.post("/register", (req, res) => {
   });
 });
 router.get("/login", (req, res) => {
+  console.log(process.env);
   const loginForm = createLoginForm();
 
   res.render("accounts/login", {
