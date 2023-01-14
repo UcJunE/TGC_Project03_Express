@@ -75,10 +75,10 @@ router.post("/register", async (req, res) => {
     password: getHashedPassword(password),
     created_date: new Date(),
   };
- console.log("this is the data pass return" ,userData)
+  console.log("this is the data pass return", userData);
   try {
+    const checkUserNameExist = await dataLayer.checkUsernameTaken(username);
     if (checkUserNameExist) {
-      const checkUserNameExist = await dataLayer.checkUsernameTaken(username);
       res.status(400);
       res.json({
         error: "User already exist",
@@ -87,12 +87,13 @@ router.post("/register", async (req, res) => {
       console.log("User created");
       await dataLayer.addNewUser(userData, 1);
       res.status(200);
-      console.log("success")
+      console.log("success");
       res.json({
         success: "User successfully registered",
       });
     }
   } catch (e) {
+    console.log(e);
     res.json({
       error: "Internal server error , Please contact adminstrator",
     });
