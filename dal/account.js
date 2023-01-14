@@ -12,6 +12,8 @@ const addNewUser = async function (userInfo, roleId = 1) {
 };
 
 const checkUsernameTaken = async function (username) {
+
+  console.log("does is user check went thru ?")
   const user = await User.where({
     username: username,
   }).fetch({
