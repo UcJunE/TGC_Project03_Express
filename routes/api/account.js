@@ -140,6 +140,7 @@ router.post("/login", async (req, res) => {
     status: "success",
     accessToken: accessToken,
     refreshToken: refreshToken,
+    username: req.body.username,
   });
 });
 

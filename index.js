@@ -115,7 +115,6 @@ async function main() {
   app.use("/cloudinary", cloudinaryRoutes);
   app.use("/cart", shoppingCartRoutes);
   app.use("/order", checkIfAuthenticated, ordersRoutes);
-  
 
   //api routes
   app.use("/api/products", express.json(), api.products);
@@ -138,6 +137,6 @@ async function main() {
 
 main();
 
-app.listen(8888, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server has started");
 });
