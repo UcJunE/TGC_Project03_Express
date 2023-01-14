@@ -65,9 +65,8 @@ router.post("/register", async (req, res) => {
     res.json({
       error: error,
     });
-    return;
   }
- 
+
   const userData = {
     username: username,
     name: name,
@@ -76,7 +75,7 @@ router.post("/register", async (req, res) => {
     password: getHashedPassword(password),
     created_date: new Date(),
   };
-
+ console.log("this is the data pass return" ,userData)
   try {
     if (checkUserNameExist) {
       const checkUserNameExist = await dataLayer.checkUsernameTaken(username);
@@ -88,6 +87,7 @@ router.post("/register", async (req, res) => {
       console.log("User created");
       await dataLayer.addNewUser(userData, 1);
       res.status(200);
+      console.log("success")
       res.json({
         success: "User successfully registered",
       });
