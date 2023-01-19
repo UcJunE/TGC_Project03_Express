@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
       filteredProducts.push([product.get("design"), product.get("design")]);
     }
   });
-  filteredProducts.unshift([0, "----"]);
+  filteredProducts.unshift(["", "----"]);
   // console.log("products", filteredProducts);
 
   // console.log(colors);
@@ -66,12 +66,15 @@ router.get("/", async (req, res) => {
       if (form.data.name) {
         q.where("name", "like", "%" + form.data.name + "%");
       }
+
       if (form.data.id && form.data.id != "0") {
         q.where("jewelries.id", "=", form.data.id);
       }
+
       if (form.data.color_id && form.data.color_id !== "0") {
-        q.where("color_id", "=", form.data.color_id);
+        q.where("color_id", "=", parseInt(form.data.color_id));
       }
+      // console.log(typeof form.data.color_id);
       if (form.data.materials && form.data.materials !== "0") {
         q.query(
           "join",
@@ -80,20 +83,23 @@ router.get("/", async (req, res) => {
           "jewel_id"
         ).where("material_id", "in", form.data.materials.split(","));
       }
-      if (form.data.design) {
+
+      if (form.data.design && form.data.design != "") {
         q.where("design", "=", form.data.design);
       }
+      // console.log(form.data.design);
       if (form.data.min_cost) {
-        q.where("cost", ">=", form.data.min_cost);
+        q.where("cost", ">=", parseInt(form.data.min_cost));
       }
       if (form.data.max_cost) {
         q.where("cost", "<=", form.data.max_cost);
       }
 
+      console.log("this is q", q);
       let products = await q.fetch({
         withRelated: ["color", "materials"],
       });
-
+      // console.log(products.toJSON());
       res.render("products/index", {
         products: products.toJSON(),
         form: form.toHTML(bootstrapField),
